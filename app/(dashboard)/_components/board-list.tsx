@@ -1,8 +1,8 @@
 "use client";
 
-import Empty_Boards from "./sidebar/empty-boards";
-import Empty_Favourites from "./sidebar/empty-favourites";
-import Empty_Search from "./sidebar/empty-search";
+import Empty_Boards from "./empty-boards";
+import Empty_Favourites from "./empty-favourites";
+import Empty_Search from "./empty-search";
 
 interface Board_List_Props {
   org_id: string;
