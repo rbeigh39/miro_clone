@@ -69,7 +69,7 @@ const Board_List = ({ org_id, query }: Board_List_Props) => {
               author_name={board.author_name}
               created_at={board._creationTime}
               org_id={board.org_id}
-              is_favourite={false}
+              is_favourite={board.is_favourite}
             />
           );
         })}

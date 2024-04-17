@@ -6,7 +6,7 @@ export const get = query({
     org_id: v.string(),
   },
   handler: async (ctx, args) => {
-    const identity = ctx.auth.getUserIdentity();
+    const identity = await ctx.auth.getUserIdentity();
 
     if (!identity) throw new Error("Unauthorized");
 
@@ -16,6 +16,25 @@ export const get = query({
       .order("desc")
       .collect();
 
-    return boards;
+    const boards_with_favourite_relation = boards.map((board) => {
+      return ctx.db
+        .query("user_favourites")
+        .withIndex("by_user_board", (q) => {
+          return q.eq("user_id", identity.subject).eq("board_id", board._id);
+        })
+        .unique()
+        .then((favourite) => {
+          return {
+            ...board,
+            is_favourite: !!favourite,
+          };
+        });
+    });
+
+    const boards_with_favourite_boolean = await Promise.all(
+      boards_with_favourite_relation
+    );
+
+    return boards_with_favourite_boolean;
   },
 });

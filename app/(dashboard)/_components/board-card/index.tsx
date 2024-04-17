@@ -10,6 +10,10 @@ import { Footer } from "./footer";
 import { Actions } from "@/components/actions";
 import { MoreHorizontal, MoreHorizontalIcon } from "lucide-react";
 
+import { use_api_mutation } from "@/hooks/use-api-mutations";
+import { api } from "@/convex/_generated/api";
+import { toast } from "sonner";
+
 interface Board_Card_Props {
   id: string;
   title: string;
@@ -38,6 +42,25 @@ export const Board_Card = ({
     addSuffix: true,
   });
 
+  const { mutate: on_favourite, pending: pending_favourite } = use_api_mutation(
+    api.board.favourite
+  );
+
+  const { mutate: on_unfavourite, pending: pending_unfavourite } =
+    use_api_mutation(api.board.un_favourite);
+
+  const toggle_favourite = () => {
+    if (is_favourite) {
+      on_unfavourite({ id }).catch(() =>
+        toast.error("Failed to unfavourite board")
+      );
+    } else {
+      on_favourite({ id, org_id }).catch(() =>
+        toast.error("Failed to favourite board")
+      );
+    }
+  };
+
   return (
     <Link href={`/board/${id}`}>
       <div className="group aspect-[100/127] border rounded-lg flex flex-col justify-between overflow-hidden">
@@ -55,8 +78,8 @@ export const Board_Card = ({
           title={title}
           author_label={author_label}
           created_at_label={created_at_label}
-          onClick={() => {}}
-          disabled={false}
+          onClick={toggle_favourite}
+          disabled={pending_favourite || pending_unfavourite}
         />
       </div>
     </Link>
