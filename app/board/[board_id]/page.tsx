@@ -1,4 +1,6 @@
 import { Canvas } from "./_components/canvas";
+import { Room } from "@/components/room";
+import { Loading } from "./_components/loading";
 
 interface Board_Id_Page_Props {
   params: {
@@ -7,7 +9,11 @@ interface Board_Id_Page_Props {
 }
 
 const Board_Id_Page = ({ params }: Board_Id_Page_Props) => {
-  return <Canvas board_id={params.board_id} />;
+  return (
+    <Room room_id={params.board_id} fallback={<Loading />}>
+      <Canvas board_id={params.board_id} />
+    </Room>
+  );
 };
 
 export default Board_Id_Page;
